@@ -1,0 +1,55 @@
+.sidebar {
+    position: fixed;
+    left: var(--margin);
+    bottom: var(--margin);
+    top: 70px;
+    width: 220px;
+    background: var(--secondary-color);
+    transition: 0.4s;
+}
+.sidebar ul li a {
+    display: block;
+    color: var(--primary-text-color);
+    font-size: 1.3rem;
+    padding: 1rem;
+    font-weight: 600;
+    margin-bottom: 1px;
+}
+
+.sidebar ul li a.active {
+    color: var(--primary-color);
+}
+.sidebar ul li:hover {
+    background: rgba(0, 0, 0, 0.1);
+    border-left: var(--primary-color) solid 5px;
+}
+
+.sidebar ul li a span.icon {
+    margin-right: 10px;
+    display: inline-block;
+}
+.sidebar ul li a span.title {
+    display: inline-block;
+}
+
+.sidebar.collapse {
+    width: 90px;
+}
+
+.sidebar.collapse ul li a {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+.sidebar.collapse ul li a span.icon {
+    margin: 0;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.sidebar.collapse ul li a span.title {
+    font-size: 0.8rem;
+    margin-top: 5px;
+    text-align: center;
+}
