@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
     makeMessageAsRead,
     makeSpamMessageAsRead,
+    makeDeletedMessageAsRead
 } from "../redux/features/messageSlice";
 
 const Details = ({ match }) => {
@@ -28,14 +29,15 @@ const Details = ({ match }) => {
             setMessageDetails(data);
             // here it can check the message is read or unread and redirect to details page
             if (!data.isRead) {
-                if (data.isSpam) {
-                    dispatch(makeSpamMessageAsRead(data.id));
-                } else {
-                    dispatch(makeMessageAsRead(data.id));
-                }
+                // for deleted page, just make message as read
+                if (data.isDeleted) return dispatch(makeDeletedMessageAsRead(data.id));
+                // for spam page, make message as read and reduce spam count;
+                if (data.isSpam) return dispatch(makeSpamMessageAsRead(data.id));
+                // For inbox, make message as read and reduce inbox count;
+                return dispatch(makeMessageAsRead(data.id));
             }
         }
-    }, [match.params.id, messages]);
+    }, [match.params.id, messages, dispatch]);
 
     return (
         <Layout topTitle={"Details"}>

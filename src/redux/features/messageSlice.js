@@ -9,7 +9,6 @@ import {
     createFlagMessage,
     removeFlagMessage,
     deleteMessageById,
-    checkFlagMessage,
 } from "../../utils";
 
 const initialState = {
@@ -59,38 +58,29 @@ export const messageSlice = createSlice({
         deleteMessage: (state, action) => {
             console.log("action", action);
             state.deletedCount += 1;
-            state.inboxCount -= 1;
             state.allMessages = deleteMessageById(
-                action.payload,
-                state.allMessages
-            );
-            // Check if the data is present in flagged or not
-            const isFlagMessage = checkFlagMessage(
-                action.payload,
+                action.payload.id,
                 state.allMessages
             );
             // If it is flagged, then remove flagged data and decrement count
-            if (isFlagMessage) {
-                console.log("Suvv");
-                state.flaggedCount -= 1;
+            if (action.payload.isFlagged) return state.flaggedCount -= 1;
+
+            if (action.payload.isSpam) {
+                if (!action.payload.isRead) {
+                    state.spamCount -= 1;
+                    return;
+                }
+            }
+            if (!action.payload.isRead) {
+                state.inboxCount -= 1;
             }
         },
-        deleteSpamMessage: (state, action) => {
-            state.deletedCount += 1;
-            state.spamCount -= 1;
-            state.allMessages = deleteMessageById(
+        // make deleted unread message as read
+        makeDeletedMessageAsRead: (state, action) => {
+            state.allMessages = createReadMessage(
                 action.payload,
                 state.allMessages
             );
-            // Check if the data is present in flagged or not
-            const isFlagMessage = checkFlagMessage(
-                action.payload,
-                state.allMessages
-            );
-            // If it is flagged, then remove flagged data and decrement count
-            if (isFlagMessage) {
-                state.flaggedCount -= 1;
-            }
         },
     },
 });
@@ -100,9 +90,9 @@ export const {
     makeMessageAsRead,
     makeSpamMessageAsRead,
     makeFlaggedMessage,
+    makeDeletedMessageAsRead,
     removeFlaggedMessage,
     deleteMessage,
-    deleteSpamMessage,
 } = messageSlice.actions;
 
 export default messageSlice.reducer;

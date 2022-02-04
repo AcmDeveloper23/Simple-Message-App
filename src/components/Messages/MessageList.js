@@ -3,7 +3,6 @@ import {
     makeFlaggedMessage,
     removeFlaggedMessage,
     deleteMessage,
-    deleteSpamMessage,
 } from "../../redux/features/messageSlice";
 import { Label, Icon, Container, List, Image } from "semantic-ui-react";
 import SearchBox from "../SearchBox";
@@ -13,7 +12,6 @@ import { Link } from "react-router-dom";
 const MessageList = ({
     messageData,
     dispatch,
-    fromSpamPage,
     fromFlaggedPage,
 }) => {
     const [messages, setMessages] = useState(messageData);
@@ -96,32 +94,19 @@ const MessageList = ({
                                             />
                                         ))}{" "}
                                     {!item.isDeleted &&
-                                        !fromFlaggedPage &&
-                                        (fromSpamPage ? (
+                                        !fromFlaggedPage && (
                                             <Icon
                                                 color="red"
                                                 name="trash alternate"
                                                 size="large"
                                                 onClick={() =>
                                                     dispatch(
-                                                        deleteSpamMessage(
-                                                            item.id
-                                                        )
+                                                        deleteMessage({ id: item.id, isRead: item?.isRead, isFlagged: item?.isFlagged, isSpam: item?.isSpam, })
                                                     )
                                                 }
                                             />
-                                        ) : (
-                                            <Icon
-                                                color="red"
-                                                name="trash alternate"
-                                                size="large"
-                                                onClick={() =>
-                                                    dispatch(
-                                                        deleteMessage(item.id)
-                                                    )
-                                                }
-                                            />
-                                        ))}
+                                        )
+                                    }
                                 </List.Content>
                             </List.Item>
                         ))}

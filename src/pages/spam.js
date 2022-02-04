@@ -21,7 +21,6 @@ const Spam = () => {
             <MessageList
                 messageData={messageData}
                 dispatch={dispatch}
-                fromSpamPage={true}
             />
         </Layout>
     );
